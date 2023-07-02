@@ -1,5 +1,5 @@
 [project]
-name = "llmlib_mark-watson"
+name = "llmlib"
 version = "0.0.1"
 authors = [
   { name="Mark Watson", email="markw@markwatson.com" },
