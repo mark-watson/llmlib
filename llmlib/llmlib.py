@@ -7,12 +7,10 @@ import os
 API_TYPES = ["openai", "fastchat", "huggingface"]
 API_TYPE = os.getenv("LLMLIB_API_TYPE", "openai")
 
+global llm_wrapper
+
 if API_TYPE == "openai":
-    key = os.getenv("OPENAI_API_KEY")
-    if key is None:
-        raise Exception("OPENAI_API_KEY environment variable not set")
-    from llmlib import openai
-    openai.api_key = key
+    llm_wrapper = openai.OpenAiWrapper()
 elif API_TYPE == "fastchat":
     from llmlib import fastchat
     pass
