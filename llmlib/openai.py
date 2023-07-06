@@ -24,6 +24,8 @@ class OpenAiWrapper(BaseModelWrapper):
         self.embeddings_dir = embeddings_dir
         self.db = None
         self.index = None
+        self.retriever = None
+        self.qa = None
 
     # complete text:
     def get_completion(self, prompt, max_tokens=64):
@@ -44,18 +46,12 @@ class OpenAiWrapper(BaseModelWrapper):
                 "persist_directory": self.embeddings_dir,
                 "vectorstore_type": "chromadb"})
 
-    def create_local_embeddings(self, texts):
-        " texts is a list of strings "
-        self._init_index()
-        self.index.add_texts(texts)
-        self.retriever = None
-        self.qa = None
-
     def create_local_embeddings_files_in_dir(self, path):
         " path is a directory "
         self._init_index()
-        loader = DirectoryLoader(path, glob="**/*.md")
-        self.from_loaders([loader])
+        loader = TextLoader()
+        loader = DirectoryLoader(path, glob="**/*") # or **/*.txt, **/*.md, etc.
+        self.index.from_loaders([loader])
     # query local embeddings:
     def query_local_embeddings(self, query, n=10):
         if self.index is None:
@@ -72,3 +68,4 @@ class OpenAiWrapper(BaseModelWrapper):
                                                   chain_type="stuff",
                                                   retriever=self.retriever)
         answer = self.qa.run(query)
+        return answer
