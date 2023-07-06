@@ -49,9 +49,9 @@ class OpenAiWrapper(BaseModelWrapper):
     def create_local_embeddings_files_in_dir(self, path):
         " path is a directory "
         self._init_index()
-        loader = TextLoader()
         loader = DirectoryLoader(path, glob="**/*") # or **/*.txt, **/*.md, etc.
         self.index.from_loaders([loader])
+
     # query local embeddings:
     def query_local_embeddings(self, query, n=10):
         if self.index is None:

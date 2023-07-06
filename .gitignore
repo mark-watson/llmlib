@@ -10,4 +10,5 @@ venv
 .idea
 build
 dist
+db_embeddings
 
