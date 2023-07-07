@@ -8,9 +8,6 @@ class BaseModelWrapper():
     def get_completion(self, prompt, max_tokens=64):
         pass
     # create local embeddings:
-    def create_local_embeddings(self, texts):
-        " texts is a list of strings "
-        pass
     def create_local_embeddings_files_in_dir(self, path):
         " path is a directory "
         pass
