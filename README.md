@@ -7,6 +7,13 @@
 
 ## NOTE: This project is just getting started, not ready to use yet
 
+
+Run the test programs:
+
+    python test_completion.py
+    python test_local_index.py
+
+
 ## Docs
 
 TBD
