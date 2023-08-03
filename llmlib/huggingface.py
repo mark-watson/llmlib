@@ -12,17 +12,21 @@ import torch
 from langchain.llms.base import LLM
 from llama_index import LLMPredictor
 
+from pprint import pprint
+
 class CustomLLM(LLM):
     model_name = "facebook/opt-iml-1.3b"
     # I am not using a GPU, but you can add device="cuda:0"
     # to the pipeline call if you have a local GPU or
     # are running this on Google Colab:
-    pipeline = pipeline("text-generation", model=model_name,
+    pipeline = pipeline("text-generation",
+                        model=model_name,
                         model_kwargs={"torch_dtype":torch.bfloat16})
 
     def _call(self, prompt, stop = None):
         prompt_length = len(prompt)
         response = self.pipeline(prompt, max_new_tokens=200)
+        pprint(response)
         first_response = response[0]["generated_text"]
         # only return newly generated tokens
         returned_text = first_response[prompt_length:]
@@ -49,10 +53,22 @@ class HuggingFaceAiWrapper(BaseModelWrapper):
         max_chunk_overlap = 0 # 10
         self.prompt_helper = PromptHelper(max_input_size, num_output,
                                           max_chunk_overlap)
+        self.pipeline = None
 
     # complete text:
     def get_completion(self, prompt, max_tokens=64):
-        pass # TBD        
+        if self.pipeline is None:
+            self.pipeline = pipeline("text-generation",
+                                     model="facebook/opt-iml-1.3b",
+                                     model_kwargs={"torch_dtype":torch.bfloat16})   
+        c = self.pipeline(prompt, max_new_tokens=max_tokens)
+        pprint(c)
+        try:
+            return c[0]["generated_text"]
+        except Exception as e:
+            print(e)
+            return ""
+        
 
     def create_local_embeddings_files_in_dir(self, path):
         " path is a directory "

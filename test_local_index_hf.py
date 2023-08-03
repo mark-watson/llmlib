@@ -1,7 +1,6 @@
-from llmlib.openai import OpenAiWrapper, HuggingFaceAiWrapper
+from llmlib.huggingface import HuggingFaceAiWrapper
 
-llm = OpenAiWrapper()
-# llm = HuggingFaceAiWrapper()
+llm = HuggingFaceAiWrapper()
 
 llm.create_local_embeddings_files_in_dir("./data/")
 
