@@ -153,9 +153,11 @@ def test_ollama_embed(mock_urlopen):
     assert emb == [0.1, 0.2, 0.3]
 
 
+@patch("os.getenv")
 @patch("urllib.request.urlopen")
-def test_ollama_local_no_key(mock_urlopen):
+def test_ollama_local_no_key(mock_urlopen, mock_getenv):
     """Local Ollama should work with no API key."""
+    mock_getenv.side_effect = lambda k, d="": "" if k == "OLLAMA_API_KEY" else d
     mock_urlopen.return_value = MockResponse({
         "response": "42"
     })

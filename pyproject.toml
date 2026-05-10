@@ -6,12 +6,11 @@ authors = [
 ]
 description = "Portability lib for OpenAI, Hugging Face, and local model APIs"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
@@ -23,11 +22,24 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-openai = ["openai>=1.0"]
-huggingface = ["transformers>=4.30", "torch>=2.0", "sentence-transformers>=2.2"]
-chromadb = ["chromadb>=0.4"]
-all = ["openai>=1.0", "transformers>=4.30", "torch>=2.0", "sentence-transformers>=2.2", "chromadb>=0.4"]
-dev = ["pytest>=7.0", "pytest-mock>=3.10"]
+openai = [
+    "openai>=1.0",
+]
+huggingface = [
+    "transformers>=4.30",
+    "torch>=2.0",
+    "sentence-transformers>=2.2",
+]
+chromadb = [
+    "chromadb>=0.4",
+]
+all = [
+    "openai>=1.0",
+    "transformers>=4.30",
+    "torch>=2.0",
+    "sentence-transformers>=2.2",
+    "chromadb>=0.4",
+]
 
 [project.urls]
 Homepage = "https://github.com/mark-watson/llmlib"
@@ -37,3 +49,12 @@ Changelog = "https://github.com/mark-watson/llmlib/releases"
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["llmlib*"]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0",
+    "pytest-mock>=3.10",
+]

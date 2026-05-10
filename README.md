@@ -7,18 +7,26 @@ Portability library for OpenAI, Hugging Face, Google Gemini, Fireworks.ai, Ollam
 
 ## Installation
 
+Using `uv` (recommended):
+
 ```bash
 # OpenAI provider only
-pip install llmlib[openai]
+uv add llmlib --optional openai
 
 # Hugging Face provider only (local models)
-pip install llmlib[huggingface]
+uv add llmlib --optional huggingface
 
 # All providers + ChromaDB embedding store
-pip install llmlib[all]
+uv add llmlib --optional all
 
 # Development dependencies (tests)
-pip install llmlib[all,dev]
+uv sync --extra all --group dev
+```
+
+Using `pip`:
+
+```bash
+pip install llmlib[all]
 ```
 
 ## Quickstart
@@ -105,20 +113,20 @@ See the `examples/` directory:
 - `examples/fireworks_chat.py` — Fireworks.ai chat completion.
 - `examples/ollama_chat.py` — Ollama chat completion.
 
-Run them:
+Run them with `uv run`:
 
 ```bash
-python examples/basic_completion.py
-python examples/embeddings_search.py
-python examples/gemini_search.py
-python examples/fireworks_chat.py
-python examples/ollama_chat.py
+uv run examples/basic_completion.py
+uv run examples/embeddings_search.py
+uv run examples/gemini_search.py
+uv run examples/fireworks_chat.py
+uv run examples/ollama_chat.py
 ```
 
 ## Running Tests
 
 ```bash
-pytest tests/
+uv run pytest
 ```
 
 ## License
