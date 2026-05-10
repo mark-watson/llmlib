@@ -1,14 +1,22 @@
-.venv
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-venv
-.eggs
-.pytest_cache
-*.egg-info
-.DS_Store
-.idea
-build
-dist
-db_embeddings
+*.egg-info/
+.eggs/
+dist/
+build/
 
+# Virtual environments
+.venv/
+venv/
+
+# IDE / OS
+.DS_Store
+.idea/
+
+# Testing / CI
+.pytest_cache/
+
+# Embedding stores created at runtime
+db_embeddings/

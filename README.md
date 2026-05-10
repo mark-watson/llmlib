@@ -1,36 +1,126 @@
-# Portability lib for OpenAI, Hugging Face, and FastChat local model APIs
+# llmlib
+
+Portability library for OpenAI, Hugging Face, Google Gemini, Fireworks.ai, Ollama, and local model APIs.
 
 [![PyPI](https://img.shields.io/pypi/v/llmlib.svg)](https://pypi.org/project/llmlib/)
-[![Changelog](https://img.shields.io/github/v/release/mark-watson/llmlib?include_prereleases&label=changelog)](https://github.com/mark-watson/llmlib/releases)
-[![Tests](https://github.com/mark-watson/llmlib/workflows/Test/badge.svg)](https://github.com/mark-watson/llmlib/actions?query=workflow%3ATest)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/mark-watson/llmlib/blob/master/LICENSE)
 
-## This library was written for examples in a book I wrote
+## Installation
 
-You can read my book free online or can be purchased:
+```bash
+# OpenAI provider only
+pip install llmlib[openai]
 
-[Safe For Humans AI - A "humans-first" approach to designing and building AI systems](https://leanpub.com/safe-for-humans-AI/read)
+# Hugging Face provider only (local models)
+pip install llmlib[huggingface]
 
-## Supported APIs
+# All providers + ChromaDB embedding store
+pip install llmlib[all]
 
-- get_completion(prompt, max_tokens=64)
-- create_local_embeddings_files_in_dir(path_to_document_files_dir)
-- query_local_embeddings(query)
+# Development dependencies (tests)
+pip install llmlib[all,dev]
+```
 
-These APIs are implemented separately in two Python classes:
+## Quickstart
 
-- OpenAiWrapper
-- HuggingFaceAiWrapper
+Set your API key for the provider you want to use:
 
-## Supported APIs and Models
+```bash
+export OPENAI_API_KEY="sk-..."
+export GOOGLE_API_KEY="..."
+export FIREWORKS_API_KEY="..."
+export OLLAMA_API_KEY="..."   # optional for local Ollama
+```
 
-Currently this compatibiolity library only works with selected OpenAI APIs and the small Hugging Face model **facebook/opt-iml-1.3b** that can be run locally on a laptop with no GPU and only 8G of RAM.
+Run a completion:
 
+```python
+from llmlib import OpenAiWrapper
 
-Run the example programs:
+llm = OpenAiWrapper()
+text = llm.get_completion("Once upon a time", max_tokens=64)
+print(text)
+```
 
-    python test_completion_openai.py
-    python test_local_index_openai.py
-    python test_completion_hf.py
-    python test_local_index_hf.py
+Index local documents and search:
 
+```python
+llm.create_local_embeddings_files_in_dir("./data/")
+results = llm.query_local_embeddings("definition of sports", n=3)
+for r in results:
+    print(r["score"], r["text"][:100])
+```
+
+## Supported Providers
+
+| Provider | Class | Env Var | Default Model |
+|---|---|---|---|
+| OpenAI | `OpenAiWrapper` | `OPENAI_API_KEY` | `gpt-3.5-turbo` |
+| Hugging Face | `HuggingFaceAiWrapper` | — | `facebook/opt-iml-1.3b` |
+| Google Gemini | `GeminiWrapper` | `GOOGLE_API_KEY` | `gemini-1.5-flash` |
+| Fireworks.ai | `FireworksWrapper` | `FIREWORKS_API_KEY` | `llama-v3p1-8b-instruct` |
+| Ollama | `OllamaWrapper` | `OLLAMA_API_KEY` (optional) | `llama3.2` |
+
+## API Reference
+
+### BaseModelWrapper (abstract)
+
+- `get_completion(prompt, *, max_tokens=64, temperature=0.5, top_p=0.75) -> str`
+- `create_local_embeddings_files_in_dir(path) -> None`
+- `query_local_embeddings(query, n=10) -> list[dict]`
+
+### OpenAiWrapper
+
+- Constructor: `OpenAiWrapper(key=None, embeddings_dir="./db_embeddings", completion_model="gpt-3.5-turbo", embedding_model="text-embedding-3-small")`
+- `get_chat_completion(messages, *, model=None, max_tokens=256, temperature=0.7, top_p=1.0) -> str`
+
+### HuggingFaceAiWrapper
+
+- Constructor: `HuggingFaceAiWrapper(embeddings_dir="./db_embeddings", generation_model="facebook/opt-iml-1.3b", embedding_model="sentence-transformers/all-MiniLM-L6-v2", device=-1, torch_dtype="bfloat16")`
+
+### GeminiWrapper
+
+- Constructor: `GeminiWrapper(key=None, embeddings_dir="./db_embeddings", model="gemini-1.5-flash", embedding_model="models/text-embedding-004")`
+- `get_completion_with_search(prompt, *, max_tokens=256, temperature=0.5, top_p=0.75) -> dict` — returns `{"text": str, "grounding": list}`
+- `get_chat_completion(messages, *, max_tokens=256, temperature=0.7, top_p=1.0, search=False) -> str`
+
+### FireworksWrapper
+
+- Constructor: `FireworksWrapper(key=None, embeddings_dir="./db_embeddings", model="accounts/fireworks/models/llama-v3p1-8b-instruct", embedding_model="nomic-ai/nomic-embed-text-v1.5")`
+- `get_chat_completion(messages, *, max_tokens=256, temperature=0.7, top_p=1.0) -> str`
+
+### OllamaWrapper
+
+- Constructor: `OllamaWrapper(key=None, embeddings_dir="./db_embeddings", model="llama3.2", embedding_model="nomic-embed-text", base_url="https://ollama.com")`
+- `get_chat_completion(messages, *, max_tokens=256, temperature=0.7, top_p=1.0) -> str`
+- Pass `base_url="http://localhost:11434"` for a local Ollama instance.
+
+## Examples
+
+See the `examples/` directory:
+
+- `examples/basic_completion.py` — text completion with all providers.
+- `examples/embeddings_search.py` — indexing and similarity search.
+- `examples/gemini_search.py` — Gemini with Google Search grounding.
+- `examples/fireworks_chat.py` — Fireworks.ai chat completion.
+- `examples/ollama_chat.py` — Ollama chat completion.
+
+Run them:
+
+```bash
+python examples/basic_completion.py
+python examples/embeddings_search.py
+python examples/gemini_search.py
+python examples/fireworks_chat.py
+python examples/ollama_chat.py
+```
+
+## Running Tests
+
+```bash
+pytest tests/
+```
+
+## License
+
+Apache 2.0
