@@ -65,7 +65,7 @@ for r in results:
 |---|---|---|---|
 | OpenAI | `OpenAiWrapper` | `OPENAI_API_KEY` | `gpt-3.5-turbo` |
 | Hugging Face | `HuggingFaceAiWrapper` | — | `facebook/opt-iml-1.3b` |
-| Google Gemini | `GeminiWrapper` | `GOOGLE_API_KEY` | `gemini-1.5-flash` |
+| Google Gemini | `GeminiWrapper` | `GOOGLE_API_KEY` | `gemini-3-flash-preview` |
 | Fireworks.ai | `FireworksWrapper` | `FIREWORKS_API_KEY` | `llama-v3p1-8b-instruct` |
 | Ollama | `OllamaWrapper` | `OLLAMA_API_KEY` (optional) | `llama3.2` |
 
@@ -88,7 +88,7 @@ for r in results:
 
 ### GeminiWrapper
 
-- Constructor: `GeminiWrapper(key=None, embeddings_dir="./db_embeddings", model="gemini-1.5-flash", embedding_model="models/text-embedding-004")`
+- Constructor: `GeminiWrapper(key=None, embeddings_dir="./db_embeddings", model="gemini-3-flash-preview", embedding_model="text-embedding-004")`
 - `get_completion_with_search(prompt, *, max_tokens=256, temperature=0.5, top_p=0.75) -> dict` — returns `{"text": str, "grounding": list}`
 - `get_chat_completion(messages, *, max_tokens=256, temperature=0.7, top_p=1.0, search=False) -> str`
 

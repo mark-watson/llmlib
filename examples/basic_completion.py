@@ -55,7 +55,7 @@ def demo_ollama():
 
 if __name__ == "__main__":
     demo_openai()
-    # demo_huggingface()  # Uncomment if you have the model downloaded locally.
-    # demo_gemini()       # Uncomment if GOOGLE_API_KEY is set.
-    # demo_fireworks()    # Uncomment if FIREWORKS_API_KEY is set.
-    # demo_ollama()       # Uncomment if Ollama is available.
+    #demo_huggingface()  # Uncomment if you have the model downloaded locally.
+    demo_gemini()       # Uncomment if GOOGLE_API_KEY is set.
+    demo_fireworks()    # Uncomment if FIREWORKS_API_KEY is set.
+    demo_ollama()       # Uncomment if Ollama is available.

@@ -23,8 +23,10 @@ class GeminiWrapper(BaseModelWrapper):
         self,
         key: str | None = None,
         embeddings_dir: str = "./db_embeddings",
-        model: str = "gemini-1.5-flash",
-        embedding_model: str = "models/text-embedding-004",
+        # Using a standard model instead of a 'thinking' model (like gemini-3-flash) 
+        # to prevent small max_tokens budgets from being exhausted before text is returned.
+        model: str = "gemini-2.0-flash",
+        embedding_model: str = "text-embedding-004",
         base_url: str = _DEFAULT_BASE,
     ) -> None:
         super().__init__(embeddings_dir=embeddings_dir)
@@ -35,8 +37,9 @@ class GeminiWrapper(BaseModelWrapper):
                 "Google API key is required. Pass 'key' or set GOOGLE_API_KEY."
             )
         self._key = key
-        self._model = model
-        self._embedding_model = embedding_model
+        # Ensure model names don't have 'models/' prefix internally to avoid double-prefixing
+        self._model = model.removeprefix("models/")
+        self._embedding_model = embedding_model.removeprefix("models/")
         self._base = base_url.rstrip("/")
         self._store: EmbeddingStore | None = None
 

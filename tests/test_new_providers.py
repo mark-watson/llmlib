@@ -81,6 +81,33 @@ def test_gemini_embed(mock_urlopen):
     assert emb == [0.1, 0.2, 0.3]
 
 
+@patch("llmlib.utils.urllib.request.urlopen")
+def test_gemini_url_construction(mock_urlopen):
+    mock_urlopen.return_value = MockResponse({"candidates": []})
+
+    # Test with default (no prefix)
+    wrapper = GeminiWrapper(key="FAKE_KEY", model="gemini-3-flash-preview")
+    wrapper.get_completion("test")
+    called_url = mock_urlopen.call_args[0][0].full_url
+    assert "/models/gemini-3-flash-preview:generateContent" in called_url
+    assert "/models/models/" not in called_url
+
+    # Test with explicit 'models/' prefix
+    wrapper2 = GeminiWrapper(key="FAKE_KEY", model="models/gemini-3-flash-preview")
+    wrapper2.get_completion("test")
+    called_url2 = mock_urlopen.call_args[0][0].full_url
+    assert "/models/gemini-3-flash-preview:generateContent" in called_url2
+    assert "/models/models/" not in called_url2
+
+    # Test embedding URL
+    mock_urlopen.return_value = MockResponse({"embedding": {"values": [0.1]}})
+    wrapper3 = GeminiWrapper(key="FAKE_KEY", embedding_model="models/text-embedding-004")
+    wrapper3._embed("test")
+    called_url3 = mock_urlopen.call_args[0][0].full_url
+    assert "/models/text-embedding-004:embedContent" in called_url3
+    assert "/models/models/" not in called_url3
+
+
 # ------------------------------------------------------------------
 # Fireworks
 # ------------------------------------------------------------------

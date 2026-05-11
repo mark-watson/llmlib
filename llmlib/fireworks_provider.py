@@ -22,7 +22,8 @@ class FireworksWrapper(BaseModelWrapper):
         self,
         key: str | None = None,
         embeddings_dir: str = "./db_embeddings",
-        model: str = "accounts/fireworks/models/llama-v3p1-8b-instruct",
+        # Default instruction-tuned model known to be available and stable on Fireworks
+        model: str = "accounts/fireworks/models/llama-v3p3-70b-instruct",
         embedding_model: str = "nomic-ai/nomic-embed-text-v1.5",
         base_url: str = _DEFAULT_BASE,
     ) -> None:
