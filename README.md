@@ -2,7 +2,6 @@
 
 Portability library for OpenAI, Hugging Face, Google Gemini, Fireworks.ai, Ollama, and local model APIs.
 
-[![PyPI](https://img.shields.io/pypi/v/llmlib.svg)](https://pypi.org/project/llmlib/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/mark-watson/llmlib/blob/master/LICENSE)
 
 ## Install into uv based Python projects
